@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>结果补语 · 把字句</title>
+<style>
+:root{font-family:system-ui,-apple-system,'Noto Sans SC',sans-serif;color:#222;background:#fafafa}*{box-sizing:border-box}body{margin:0}main{max-width:800px;margin:48px auto;padding:0 20px}header{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid #ddd;padding-bottom:20px}h1{font-size:22px;font-weight:550;margin:0}.count{font-variant-numeric:tabular-nums;color:#777;font-size:13px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:25px 0}.tab,.tile,button,.choice{background:white;border:1px solid #ddd;border-radius:5px;padding:11px 15px;font-size:16px;color:inherit;cursor:pointer}.tab{font-size:14px}.tab.active{background:#222;color:#fff;border-color:#222}button:hover,.tile:hover,.choice:hover{border-color:#777}button:disabled{opacity:.45;cursor:default}.panel{background:white;border:1px solid #e5e5e5;border-radius:8px;padding:25px;min-height:340px}.top{display:flex;justify-content:space-between;color:#777;font-size:13px;margin-bottom:35px}.prompt{font-size:23px;line-height:1.9;margin:0 0 26px;white-space:pre-wrap}.tiles,.answer,.choices{display:flex;flex-wrap:wrap;gap:9px;margin:16px 0}.answer{min-height:60px;border:1px dashed #ccc;border-radius:5px;padding:10px}.tile{font-size:20px;padding:10px 14px}.tile.selected{background:#f0f0f0}.choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.choice{font-size:22px;min-height:58px}.choice.active{border-color:#222;background:#eee}.actions{display:flex;gap:10px;align-items:center;margin-top:30px;flex-wrap:wrap}.primary{background:#222;color:white;border-color:#222}.status{font-size:22px;margin-left:auto}.good{color:#21834c}.bad{color:#c34343}.field{width:100%;font:21px/1.6 inherit;border:1px solid #ccc;border-radius:5px;padding:12px;outline:none}.field:focus{border-color:#555}.reference{font-size:19px;line-height:1.8;padding-top:12px}.hidden{display:none}.progress{height:3px;background:#eee;margin-top:18px}.bar{height:100%;background:#222;width:0;transition:width .2s}.subtitle{color:#888;font-size:14px;margin-top:4px}.group{font-size:15px;color:#888;margin-bottom:14px}@media(max-width:550px){main{margin:20px auto}.panel{padding:17px}.prompt{font-size:20px}.tile{font-size:18px}}
+</style>
+</head>
+<body><main><header><div><h1>结果补语 · 把字句</h1><div class="subtitle">练习</div></div><div class="count" id="overall"></div></header><div class="progress"><div class="bar" id="bar"></div></div><nav class="tabs" id="tabs"></nav><section class="panel"><div class="top"><span id="section"></span><span id="number"></span></div><div id="work"></div><div class="actions"><button id="prev">上一题</button><button id="check" class="primary">检查</button><button id="next">下一题</button><button id="reset">重做</button><span class="status" id="status"></span></div><div id="reference" class="reference hidden"></div></section></main>
+<script>
+const sets=[
+{label:'排序',type:'order',items:[
+{parts:['朋友','把','我的手机','弄坏了','。'],answer:'朋友把我的手机弄坏了。'},
+{parts:['我','终于','把','这些生词','记住了','。'],answer:'我终于把这些生词记住了。'},
+{parts:['我','把','这篇文章','翻译成','俄语','了','。'],answer:'我把这篇文章翻译成俄语了。'},
+{parts:['他','把','照片','挂上','墙','了','。'],answer:'他把照片挂上墙了。'},
+{parts:['警察','终于','把','小偷','抓住了','。'],answer:'警察终于把小偷抓住了。'},
+{parts:['我','不小心','把','鞋子','弄坏了','。'],answer:'我不小心把鞋子弄坏了。'}]},
+{label:'选择',type:'choice',items:[
+{before:'我终于学',after:'了怎么系鞋带。',options:['完','会','见','错'],correct:'会'},
+{before:'老师讲的故事我没听',after:'。',options:['见','完','懂','到'],correct:'懂'},
+{before:'我把校长的名字记',after:'了。',options:['错','见','会','够'],correct:'错'},
+{before:'我终于找',after:'了我的鞋子。',options:['完','着','懂','会'],correct:'着'},
+{before:'我把不需要的照片删',after:'了。',options:['懂','掉','见','会'],correct:'掉'},
+{before:'我把蛋糕吃',after:'了。',options:['够','见','懂','错'],correct:'够'},
+{before:'我把窗户关',after:'了。',options:['错','上','懂','会'],correct:'上'},
+{before:'他终于考',after:'了大学。',options:['见','懂','上','错'],correct:'上'}]},
+{label:'把字句',type:'transform',items:[
+{question:'朋友弄坏了我的手机。',answers:['朋友把我的手机弄坏了。']},
+{question:'我删掉了所有不符合要求的照片。',answers:['我把所有不符合要求的照片删掉了。']},
+{question:'他关上了窗户。',answers:['他把窗户关上了。']},
+{question:'我记错了校长的名字。',answers:['我把校长的名字记错了。']},
+{question:'警察抓住了小偷。',answers:['警察把小偷抓住了。']}]},
+{label:'改错',type:'correct',items:[
+{question:'我把这篇文章翻译了成俄语。',answers:['我把这篇文章翻译成俄语了。']},
+{question:'我把作业做完不。',answers:['我没把作业做完。','我没有把作业做完。']},
+{question:'我把看见了小偷。',answers:['我看见了小偷。']},
+{question:'他把大学考上了一个。',answers:['他考上了一所大学。']},
+{question:'我把窗户关了上。',answers:['我把窗户关上了。']}]},
+{label:'搭配',type:'match',items:[
+{verb:'听',pairs:[['听到声音','到'],['理解老师说的话','懂'],['从头到尾听故事','完'],['听错名字','错']]},
+{verb:'看',pairs:[['看到小偷','见'],['理解文章','懂'],['看完电影','完'],['看错时间','错']]},
+{verb:'做',pairs:[['做好准备','好'],['做完作业','完'],['做错一道题','错']]},
+{verb:'记',pairs:[['记住生词','住'],['记错名字','错']]},
+{verb:'找',pairs:[['找到鞋子','到'],['找着钥匙','着']]}
+]}];
+// Matching prompts are complete Chinese phrases; the learner selects the complement.
+let tab=0,index=0;const saved=JSON.parse(localStorage.getItem('resultative-v1')||'{}');let state={};
+const $=id=>document.getElementById(id),key=()=>`${tab}-${index}`,item=()=>sets[tab].items[index],norm=s=>(s||'').replace(/[\s。！？,.，、]/g,'');
+function store(){localStorage.setItem('resultative-v1',JSON.stringify(saved))}
+function total(){let all=sets.reduce((a,s)=>a+s.items.length,0),done=Object.values(saved).filter(v=>v===true).length;$('overall').textContent=`${done} / ${all}`;$('bar').style.width=(done/all*100)+'%'}
+function render(){state={chosen:[],choice:null,match:{},checked:false};const s=sets[tab],q=item();$('tabs').innerHTML='';sets.forEach((x,i)=>{let b=document.createElement('button');b.className='tab'+(i===tab?' active':'');b.textContent=x.label;b.onclick=()=>{tab=i;index=0;render()};$('tabs').append(b)});$('section').textContent=s.label;$('number').textContent=`${index+1} / ${s.items.length}`;$('status').textContent='';$('status').className='status';$('reference').classList.add('hidden');$('reference').textContent='';$('check').disabled=false;let w=$('work');w.innerHTML='';
+if(s.type==='order'){let p=document.createElement('p');p.className='group';p.textContent='排列词语';w.append(p);let a=document.createElement('div');a.className='answer';let bank=document.createElement('div');bank.className='tiles';w.append(a,bank);let order=q.parts.map((_,i)=>i);for(let i=order.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]]}function draw(){a.innerHTML='';bank.innerHTML='';state.chosen.forEach((id,i)=>{let b=tile(q.parts[id]);b.onclick=()=>{state.chosen.splice(i,1);draw()};a.append(b)});order.filter(id=>!state.chosen.includes(id)).forEach(id=>{let b=tile(q.parts[id]);b.onclick=()=>{state.chosen.push(id);draw()};bank.append(b)})}draw()}
+if(s.type==='choice'){let p=document.createElement('p');p.className='prompt';p.textContent=q.before+' ___ '+q.after;w.append(p);let c=document.createElement('div');c.className='choices';q.options.forEach(o=>{let b=document.createElement('button');b.className='choice';b.textContent=o;b.onclick=()=>{state.choice=o;c.querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===b))};c.append(b)});w.append(c)}
+if(s.type==='transform'||s.type==='correct'){let p=document.createElement('p');p.className='prompt';p.textContent=q.question;let input=document.createElement('input');input.className='field';input.lang='zh';input.autocomplete='off';input.placeholder='＿＿＿＿＿＿＿＿';input.onkeydown=e=>{if(e.key==='Enter')check()};w.append(p,input)}
+if(s.type==='match'){let p=document.createElement('p');p.className='prompt';p.textContent=q.verb+' ＋ ？';w.append(p);q.pairs.forEach(([phrase,correct],i)=>{let row=document.createElement('div');row.style.cssText='display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:12px 0';let label=document.createElement('span');label.textContent=phrase;label.style.cssText='min-width:145px;font-size:18px';row.append(label);let choices=[...new Set(q.pairs.map(x=>x[1]))];['好','错','见','懂','完','到','会','住','上','够','着'].forEach(x=>{if(choices.length<4&&!choices.includes(x))choices.push(x)});choices.forEach(x=>{let b=tile(x);b.style.fontSize='16px';b.onclick=()=>{state.match[i]=x;row.querySelectorAll('button').forEach(y=>y.classList.toggle('selected',y===b))};row.append(b)});w.append(row)})}
+$('prev').disabled=index===0;$('next').disabled=index===s.items.length-1;total()}
+function tile(t){let b=document.createElement('button');b.className='tile';b.textContent=t;return b}
+function check(){let s=sets[tab],q=item(),ok=false,solution='';if(s.type==='order'){ok=state.chosen.length===q.parts.length&&norm(state.chosen.map(i=>q.parts[i]).join(''))===norm(q.answer);solution=q.answer}else if(s.type==='choice'){ok=state.choice===q.correct;solution=q.before+q.correct+q.after}else if(s.type==='transform'||s.type==='correct'){let val=$('work').querySelector('input').value;ok=q.answers.some(a=>norm(a)===norm(val));solution=q.answers[0]}else{ok=q.pairs.every(([_,c],i)=>state.match[i]===c);solution=q.pairs.map(([p,c])=>p+' → '+c).join('　·　')}
+$('status').textContent=ok?'✓':'✕';$('status').className='status '+(ok?'good':'bad');$('reference').textContent=solution;$('reference').classList.remove('hidden');saved[key()]=ok;store();total();state.checked=true}
+$('check').onclick=check;$('prev').onclick=()=>{if(index>0){index--;render()}};$('next').onclick=()=>{if(index<sets[tab].items.length-1){index++;render()}};$('reset').onclick=()=>render();render();
+</script></body></html>
